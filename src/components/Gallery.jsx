@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Modal from "./Modal";
 import { BsFillCheckCircleFill, BsCardImage } from "react-icons/bs";
 import toast from "react-hot-toast";
@@ -9,6 +9,10 @@ const Gallery = () => {
   const [selectedItems, setSelectedItems] = useState([]);
   const [filteredPhotos, setFilteredPhotos] = useState();
   const [asc, setAsc] = useState(false);
+
+  // reference for drag and drop
+  const dragRef = useRef();
+  const dragOverRef = useRef();
 
   // get data from local storage
   const gallery = useCallback(() => {
@@ -48,6 +52,24 @@ const Gallery = () => {
   const sort = () => {
     setAsc(!asc);
     setFilteredPhotos([...filteredPhotos.reverse()]);
+  };
+
+  // drag and drop sorting
+  const handleDragSorting = () => {
+    let sortedPhotos = [...filteredPhotos];
+
+    // remove and save the dragged item content
+    const draggedItemContent = sortedPhotos.splice(dragRef.current, 1)[0];
+
+    // switch the position
+    sortedPhotos.splice(dragOverRef.current, 0, draggedItemContent);
+
+    // reset the position
+    (dragRef.current = null), (dragOverRef.current = null);
+
+    // update the array
+    localStorage.setItem("photos", JSON.stringify(sortedPhotos));
+    gallery();
   };
 
   return (
@@ -119,6 +141,11 @@ const Gallery = () => {
               className={`group relative cursor-move overflow-hidden ${
                 openModal && "-z-10"
               } ${idx === 0 && "col-span-2 row-span-2"}`}
+              draggable
+              onDragStart={() => (dragRef.current = idx)}
+              onDragEnter={() => (dragOverRef.current = idx)}
+              onDragEnd={handleDragSorting}
+              onDragOver={(e) => e.preventDefault()}
             >
               <img
                 src={photo.url}
