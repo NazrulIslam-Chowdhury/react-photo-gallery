@@ -49,7 +49,7 @@ const Modal = ({ openModal, setOpenModal, gallery }) => {
 
   return (
     <div
-      className={`bg-slate-300 p-6 absolute sm:translate-x-[38rem] sm:translate-y-[8rem] -translate-x-[0.6rem] translate-y-[10rem] scale-0 opacity-0 transition-all duration-700 ease-in-out rounded z-10 ${
+      className={`bg-slate-300 p-6 absolute lg:translate-x-[35rem] lg:translate-y-[8rem] md:translate-x-[15rem] md:translate-y-[22rem] -translate-x-[0.6rem] translate-y-[10rem] scale-0 opacity-0 transition-all duration-700 ease-in-out rounded z-10 ${
         openModal && "scale-100 opacity-100"
       }`}
     >
